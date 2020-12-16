@@ -1,0 +1,183 @@
+<!doctype html>
+<html class="no-js" lang="">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>What the Flag?</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" type="text/css" href="font/material-icons.css"> 
+</head>
+<body>
+  <section class="inicio">
+    <h1>WHAT THE FLAG?</h1>    
+    <button>INICIAR</button>
+  </section> <!-- end .inicio -->
+
+  <section class="flag flag-1">  
+    <header>
+      <p>
+        <span class="mticons">star</span> 
+        ACERTOS: <span class="acertos">0</span>
+        
+      </p>
+      <p>
+        <span class="mticons">alarm</span> 
+        00:<span class="tempo">00</span>
+      </p>
+    </header>
+
+
+    <div>
+      <h1>O IDIOMA É O INGLÊS</h1>
+      <ul>
+        <li><img class="errado" src="img/svg-flags/055-italy.png"></li>
+        <li><img class="errado"  src="img/svg-flags/058-syria.png"></li>
+        <li><img class="errado" src="img/svg-flags/062-laos.png"></li>
+        <li><img class="errado" src="img/svg-flags/065-france.png"></li>
+        <li><img class="certo" src="img/svg-flags/039-nigeria.png"></li>
+        <li><img class="errado"id="dica" src="img/svg-flags/072-japan.png"></li>
+        <li><img class="certo" src="img/svg-flags/077-india.png"></li>
+        <li><img class="errado" id="dica"src="img/svg-flags/080-russia.png"></li>
+        <li><img class="certo" src="img/svg-flags/076-bahamas.png"></li>
+      </ul>
+    </div>
+
+    <footer>
+      <p>
+        <span class="mticons" id="home">home</span>
+        <span class="mticons" id="som">volume_up</span><!-- volume_off  -->
+        <span class="mticons" id="ajuda">help_outline</span>
+      </p>
+    </footer>
+  </section><!-- end .flg  .flag-1  -->
+
+  <section class="errado">
+    <p>VOCÊ PERDEU!</p> 
+    <img src="img/triste.png">
+     <button>VOLTAR</button>
+  </section>
+
+  <section class="certo">
+    <p>VOCÊ GANHOU!</p> 
+    <img src="img/trofeu.png">
+     <button>VOLTAR</button>
+  </section>
+ 
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script type="text/javascript">
+
+    // var musica = new Audio('');
+    var musica = new Audio('musica/Bouncey.mp3');
+
+    var audio = new Audio('');
+
+    var controle = 0;
+
+    var cronometro;
+
+    $("section.inicio button").on("click", function(){
+      musica = new Audio('musica/Bouncey.mp3');
+
+      musica.play();
+
+      $("section").hide();
+      $("section.flag-1").show();
+
+      
+      cronometro = setInterval(function(){
+        var tempo = parseInt($("span.tempo").text());
+        var soma = tempo + 1;
+        if(soma < 10) {
+          soma = "0" + soma;
+        }
+        $("span.tempo").text(soma);
+      }, 1000);
+    });
+    
+      $("section.flag-1 ul img.certo").one("click", function(){/////////////////////
+        var acertos = parseInt($("span.acertos").text());
+        var total = acertos + 1;
+        $("span.acertos").text(total);
+        $(this).css({opacity: 0.5});
+        audio = new Audio('musica/correct.mp3');
+        audio.play();
+          
+        if(total > 2){
+          $("section").hide();
+          $("section.certo").show();
+          musica.pause();
+          musica = new Audio('musica/win.wav');
+          musica.play();
+        }
+      });
+      
+      
+      var erros = 0;
+      $("section.flag-1 ul img.errado").one("click", function(){
+        erros++;
+        $(this).css({opacity: 0.5});
+        audio = new Audio('musica/error2.mp3');
+        audio.play();
+
+        if(erros > 1){
+          $(this).css({opacity: 100});
+          //música de erro
+          musica.pause();
+          musica = new Audio('musica/game-over.wav')
+          musica.play();
+          //transição de tela
+          $("section").hide();
+          $("section.errado").show();
+          erros = 0;
+          clearInterval(cronometro);
+          $("span.tempo").text("00")
+          $(this).css({opacity: 100});
+        }
+        
+      });
+
+      $("section.flag-1 footer p span#home").on("click", function(){
+        $("section.inicio").show();
+        musica.pause();
+        musica.currentTime = 0;
+        clearInterval(cronometro);
+        $("span.tempo").text("00")
+      });
+
+      $("section.flag-1 footer p span#som").on("click", function(){
+        if(musica.muted){
+          musica.muted = false;//volume_mute
+          document.getElementById("som").innerHTML = "<span class='mticons' id='som'>volume_up</span>";
+        }else{
+          musica.muted = true;
+          document.getElementById("som").innerHTML = "<span class='mticons' id='som'>volume_muted</span>";
+        }
+      });
+
+      $("section.flag-1 footer p span#ajuda").on("click", function(){
+        $("section.flag-1 ul img#dica").css({opacity: 0.5});
+      });
+
+      $("section.errado button").on("click", function(){
+        $("section").hide();
+        $("section.inicio").show();
+      });
+
+      $("section.certo button").on("click", function(){
+        $("section").hide();
+        $("section.inicio").show();
+      });
+
+  </script>
+  
+  <script src="js/plugins.js"></script>
+  <script src="js/main.js"></script>
+
+</body>
+</html>
